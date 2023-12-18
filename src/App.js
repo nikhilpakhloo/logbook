@@ -14,9 +14,9 @@ function App() {
         <BrowserRouter>
         <Routes>
           <Route path="/" element={<LogbookShare />} />
-          <Route path="/userlog/:itemData" element={<LogbookId/>} />
+          <Route path="/detail/:shareId/:logid" element={<LogbookId/>} />
         </Routes>
-      </BrowserRouter>
+      </BrowserRouter>  
 
      
       </div>
