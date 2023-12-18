@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+
+import Main from "./components/Main";
+import Email from "./emailtemplate/Email";
+import LogbookShare from "./pages/LogbookShare";
+import LogbookId from "./pages/LogbookId";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="app ">
+        {/* <Main /> */}
+        {/* <Email/> */}
+        <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LogbookShare />} />
+          <Route path="/userlog/:itemData" element={<LogbookId/>} />
+        </Routes>
+      </BrowserRouter>
+
+     
+      </div>
+    </>
   );
 }
 
