@@ -14,10 +14,13 @@ export default function Download() {
           <span className="ml-2 text-sm">Enjoy Diving with DIVEROID!</span>
         </div>
         <div>
-            <Link to="https://play.google.com/store/games?device=phone&hl=en-IN" target="_blank">
-          <button className="px-2 py-1 bg-blue-500 rounded-md text-white">
-            Download
-          </button>
+          <Link
+            to="https://play.google.com/store/search?q=diveroid&c=apps&hl=en-IN"
+            target="_blank"
+          >
+            <button className="px-2 py-1 bg-blue-500 rounded-md text-white">
+              Download
+            </button>
           </Link>
         </div>
       </div>

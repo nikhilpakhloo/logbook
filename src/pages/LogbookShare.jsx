@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { FaAngleRight } from "react-icons/fa6";
 import { Link, useParams } from "react-router-dom";
-import logo from "../assets/logo.png";
 import Download from "./Download";
 
 export default function LogbookShare() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { id } = useParams();
+  // const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,13 +54,18 @@ export default function LogbookShare() {
       </div>
     </div>
   );
+ const memberName = data.map((item)=>(
+  item.logbookentry.member.Name
+
+ ))
+
 
   return (
     <>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-4 md:text-center">Diveroid</h1>
         <p className="mb-4 text-4xl pr-12 md:text-center font-nanum-square-neo">
-          Take a look at Davin's Dive Log
+          Take a look at {memberName}'s Dive Log
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:mt-10">
