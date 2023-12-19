@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: "SpokaHanSansNeo-Regular";
+    src: url("./fonts/SpoqaHanSansNeo-Regular.ttf");
+    
+}
+@font-face {
+    font-family: "pangram";
+    src: url("./fonts/PPPangramSans-Medium.ttf");
+    
+}
+@font-face {
+    font-family: "pangram1";
+    src: url("./fonts/PPPangramSans-Bold.otf");
+    
+}
+@font-face {
+    font-family: "SpokHanSansNeo";
+    src: url("./fonts/SpoqaHanSansNeo-Bold.ttf");
+    
+}
+
+.font-spoka-han {
+    font-family: "SpokaHanSansNeo-Regular";
+    font-weight: 500;
+ 
+}
+.pangram {
+    font-family: "pangram";
+    font-weight: 500;
+ 
+}
+.pangram1 {
+    font-family: "pangram1";
+    font-weight: 500;
+ 
+}
+.spoka {
+    font-family: "SpokaHanSansNeo";
+    font-weight: 400;
+ 
+}
 
 
 

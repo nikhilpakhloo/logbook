@@ -7,14 +7,13 @@ import { CiTempHigh } from "react-icons/ci";
 import { MdOutlineVerticalAlignBottom } from "react-icons/md";
 import { PiGasPump } from "react-icons/pi";
 import Download from "./Download";
+
+import download from "../assets/download.png";
 export default function LogbookId() {
   const { shareId, logid } = useParams();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const isMobileOrTablet = () => {
-    const width = window.innerWidth;
-    return width <= 768;
-  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +41,7 @@ export default function LogbookId() {
 
     fetchData();
   }, [shareId, logid]);
+  console.log("data", data)
 
   // const plotData = [];
 
@@ -197,18 +197,18 @@ export default function LogbookId() {
               <IoArrowBackSharp className="w-6 h-6" />
             </Link>
 
-            <h1 className="text-blue-400 font-bold md:text-center md:text-2xl mt-6 font-nanum-square-neo">
+            <h1 className="text-blue-400 font-bold md:text-center md:text-2xl mt-6 font-spoka-han">
               {data.logbookentry && data.logbookentry.member.Name}'s log
             </h1>
-            <p className="my-2 text-3xl md:text-center font-nanum-square-neo">
+            <p className="my-2 text-3xl md:text-center pangram">
               {data.logbookentry && data.logbookentry.divingmode.Name} diving #
               {data.id}
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-1 gap-5 mt-8 md:place-items-center">
-              <div>
+            <div className="flex gap-3 md:justify-center">
+              <div className="">
                 {data && data.StartsAt && data.StartsAt.split(" ")[0] && (
                   <span
-                    className="text-sm font-semibold "
+                    className="text-sm font-semibold pangram"
                     style={{ whiteSpace: "nowrap" }}
                   >
                     {data && data.StartsAt && data.StartsAt.split(" ")[0]}
@@ -216,13 +216,13 @@ export default function LogbookId() {
                 )}
               </div>
               <div className="">
-                <span className="text-sm font-semibold">
-                  {data && data.divesite && data.divesite.Nation}
+                <span className="text-sm font-semibold pangram">
+                  {data && data.divesite && data.divesite.Nation},
                 </span>
-                <span className="text-sm font-semibold ml-2">
-                  {data && data.divesite && data.divesite.SiteLocation}
+                <span className="text-sm font-semibold ml-1 pangram">
+                  {data && data.divesite && data.divesite.SiteLocation},
                 </span>
-                <span className="text-sm font-semibold ml-2">
+                <span className="text-sm font-semibold ml-1 pangram">
                   {data && data.divesite && data.divesite.SiteName}
                 </span>
               </div>
@@ -234,17 +234,17 @@ export default function LogbookId() {
                   <div className="p-2 rounded-md bg-white ">
                     <div className="flex items-center">
                       <div className="flex flex-col ">
-                        <span className="font-semibold text-gray-400 text-sm">
+                        <span className="font-semibold text-gray-400 text-sm font-spoka-han">
                           {text[index]}
                         </span>
                         <div className="flex items-center">
                           <span className="">
-                            <span className="text-2xl">{textLogo[index]}</span>{" "}
+                            <span className="text-2xl ">{textLogo[index]}</span>{" "}
                           </span>
                           <span className="text-xl mx-2">
                             {index === 0 && (
                               <span className="">
-                                <span className="text-3xl">
+                                <span className="text-3xl pangram">
                                   {textUnits[index]}
                                 </span>
                                 <span className="text-sm mx-1">
@@ -290,27 +290,36 @@ export default function LogbookId() {
                 </div>
               ))}
             </div>
-            <div className="h-40 md:h-96 md:w-auto mt-12 flex justify-center w-full">
+            <div className="h-40 md:h-96 md:w-auto mt-12 flex justify-center w-full ">
               <canvas id="myChart" ref={chartRef}></canvas>
             </div>
           </div>
-          <div className="mt-4 flex justify-center flex-wrap gap-y-2">
+          <div className="mt-4 relative gap-y-2 flex flex-col  items-center ">
             {data.logdepthtimes &&
               data.logdepthtimes.map((entry, index) => (
-                <img
-                  key={index}
-                  src={
-                    entry.media && entry.media.length > 0
-                      ? entry.media[0].FileUrl
-                      : ""
-                  }
-                  alt={`Image ${index}`}
-                  width={1000}
-                  className="rounded-xl"
-                />
+                <div key={index} className="relative ">
+                  <img
+                    src={
+                      entry.media && entry.media.length > 0
+                        ? entry.media[0].FileUrl
+                        : ""
+                    }
+                    alt={`Image ${index}`}
+                    width={1000}
+                    className="rounded-xl"
+                  />
+                  <img
+                    src={download}
+                    alt="Download"
+                    width={20}
+                    height={20}
+                    className="absolute top-3 right-5"
+                  />
+                </div>
               ))}
           </div>
-          {isMobileOrTablet() && <Download />}
+
+          <Download />
         </>
       )}
     </>

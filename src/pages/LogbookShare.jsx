@@ -12,7 +12,7 @@ export default function LogbookShare() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://stagingapi.diveroid.com/v3/log/share/0b956534-ff1a-49e0-850a-106525e110de",
+          "https://stagingapi.diveroid.com/v3/log/share/bdb0bd2a-e504-4ee8-b91a-05f56cecf738",
           // `https://stagingapi.diveroid.com/v3/log/share/${id}`,
           {
             method: "GET",
@@ -54,17 +54,17 @@ export default function LogbookShare() {
       </div>
     </div>
   );
- const memberName = data.map((item)=>(
-  item.logbookentry.member.Name
-
- ))
+  const memberName = data && data.list ? data.list.map((item) => item.logbookentry.member.Name) : [];
+  const {isdownloadable} = data
+  console.log("download", isdownloadable)
+  
 
 
   return (
     <>
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-4 md:text-center">Diveroid</h1>
-        <p className="mb-4 text-4xl pr-12 md:text-center font-nanum-square-neo">
+        <h1 className="text-2xl font-bold mb-3 md:text-center">Diveroid</h1>
+        <p className="mb-4 text-[28px] pr-12 md:text-center font-spoka-han">
           Take a look at {memberName}'s Dive Log
         </p>
 
@@ -93,9 +93,9 @@ export default function LogbookShare() {
               <Skeleton />
             </>
           ) : (
-            data.map((item, index) => (
+            data.list.map((item, index) => (
               <Link
-                to={`/detail/0b956534-ff1a-49e0-850a-106525e110de/${item.id}`}
+                to={`/detail/bdb0bd2a-e504-4ee8-b91a-05f56cecf738/${item.id}`}
                 // to={`/detail/${id}/${item.id}`}
                 key={index}
               >
@@ -112,14 +112,12 @@ export default function LogbookShare() {
                       className="rounded-lg"
                     />
                     <div className="flex flex-col mx-5">
-                      <span className="font-nanum-square-neo">
-                        {item.CreatedAt.split(" ")[0]}
-                      </span>
-                      <span className="font-bold ">
+                      <span className="pangram">{item.CreatedAt.split(" ")[0]}</span>
+                      <span className="font-bold pangram1 ">
                         {item.logbookentry && item.logbookentry.divingmode.Name}{" "}
                         #{item.id}
                       </span>
-                      <span className="text-gray-400 text-sm mt-1 font-semibold">
+                      <span className="text-gray-400  mt-1  spoka">
                         {item.divesite && item.divesite.SiteName
                           ? item.divesite.SiteName
                           : ""}{" "}
@@ -130,13 +128,13 @@ export default function LogbookShare() {
                     </div>
                   </div>
                 </div>
-                {index !== data.length - 1 && <hr className="border-2" />}
+                {index !== data.length - 1 && <hr className="border-1 border-gray-300 mt-2" />}
               </Link>
             ))
           )}
         </div>
       </div>
-  <Download/>
+      <Download />
     </>
   );
 }
