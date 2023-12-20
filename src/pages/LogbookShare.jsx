@@ -54,11 +54,12 @@ export default function LogbookShare() {
       </div>
     </div>
   );
-  const memberName = data && data.list ? data.list.map((item) => item.logbookentry.member.Name) : [];
-  const {isdownloadable} = data
-  console.log("download", isdownloadable)
-  
-
+  const memberName =
+    data && data.list
+      ? data.list.map((item) => item.logbookentry.member.Name)
+      : [];
+  const { isdownloadable } = data;
+  console.log("download", isdownloadable);
 
   return (
     <>
@@ -69,69 +70,54 @@ export default function LogbookShare() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:mt-10">
-          {loading ? (
-            <>
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-              <Skeleton />
-            </>
-          ) : (
-            data.list.map((item, index) => (
-              <Link
-                to={`/detail/bdb0bd2a-e504-4ee8-b91a-05f56cecf738/${item.id}`}
-                // to={`/detail/${id}/${item.id}`}
-                key={index}
-              >
-                <div className="p-2 rounded-md flex mt-5">
-                  <div className="flex justify-between ">
-                    <img
-                      src={
-                        item.logdepthtimes &&
-                        item.logdepthtimes[0]?.media[0]?.FileUrl
-                      }
-                      alt=""
-                      width={100}
-                      height={100}
-                      className="rounded-lg"
-                    />
-                    <div className="flex flex-col mx-5">
-                      <span className="pangram">{item.CreatedAt.split(" ")[0]}</span>
-                      <span className="font-bold pangram1 ">
-                        {item.logbookentry && item.logbookentry.divingmode.Name}{" "}
-                        #{item.id}
-                      </span>
-                      <span className="text-gray-400  mt-1  spoka">
-                        {item.divesite && item.divesite.SiteName
-                          ? item.divesite.SiteName
-                          : ""}{" "}
-                      </span>
-                    </div>
-                    <div className="  flex items-center">
-                      <FaAngleRight />
+          {loading
+            ? Array.from({ length: 20 }).map((_, index) => (
+                <Skeleton key={index} />
+              ))
+            : data.list &&
+              data.list.map((item, index) => (
+                <Link
+                  to={`/detail/bdb0bd2a-e504-4ee8-b91a-05f56cecf738/${item.id}`}
+                  // to={`/detail/${id}/${item.id}`}
+                  key={index}
+                >
+                  <div className="p-2 rounded-md flex mt-5">
+                    <div className="flex justify-between ">
+                      <img
+                        src={
+                          item.logdepthtimes &&
+                          item.logdepthtimes[0]?.media[0]?.FileUrl
+                        }
+                        alt=""
+                        width={100}
+                        height={100}
+                        className="rounded-lg"
+                      />
+                      <div className="flex flex-col mx-5">
+                        <span className="pangram">
+                          {item.CreatedAt.split(" ")[0]}
+                        </span>
+                        <span className="font-bold pangram1 ">
+                          {item.logbookentry &&
+                            item.logbookentry.divingmode.Name}{" "}
+                          #{item.id}
+                        </span>
+                        <span className="text-gray-400  mt-1  spoka">
+                          {item.divesite && item.divesite.SiteName
+                            ? item.divesite.SiteName
+                            : ""}{" "}
+                        </span>
+                      </div>
+                      <div className="  flex items-center">
+                        <FaAngleRight />
+                      </div>
                     </div>
                   </div>
-                </div>
-                {index !== data.length - 1 && <hr className="border-1 border-gray-300 mt-2" />}
-              </Link>
-            ))
-          )}
+                  {index !== data.length - 1 && (
+                    <hr className="border-1 border-gray-300 mt-2" />
+                  )}
+                </Link>
+              ))}
         </div>
       </div>
       <Download />

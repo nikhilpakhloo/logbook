@@ -14,7 +14,6 @@ export default function LogbookId() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -41,8 +40,9 @@ export default function LogbookId() {
 
     fetchData();
   }, [shareId, logid]);
-  console.log("data", data)
-
+  console.log("data", data);
+const {isDownloadable} = data
+console.log("download4545", isDownloadable)
   // const plotData = [];
 
   // time.forEach((elapsedTime, index) => {
@@ -60,11 +60,12 @@ export default function LogbookId() {
     <PiGasPump />,
   ];
   const textUnits = [
-    data.MaxDepth ? `${data.MaxDepth}` : "",
-
-    data.DiveTime ? `${data.DiveTime}` : "",
-    data.BottomTemperature ? `${data.BottomTemperature}` : "",
-    data.GasType ? `${data.GasType}` : "",
+    data.log && data.log.MaxDepth ? `${data.log.MaxDepth}` : "",
+    data.log && data.log.DiveTime ? `${data.log.DiveTime}` : "",
+    data.log && data.log.BottomTemperature
+      ? `${data.log.BottomTemperature}`
+      : "",
+    data.log && data.log.GasType ? `${data.log.GasType}` : "",
   ];
 
   const time =
@@ -112,13 +113,13 @@ export default function LogbookId() {
   const chartRef = useRef(null);
 
   useEffect(() => {
-    if (!loading && data.logdepthtimes) {
+    if (!loading && data.log && data.log.logdepthtimes) {
       const ctx = chartRef.current.getContext("2d");
-
+  
       const gradient = ctx.createLinearGradient(0, 0, 0, 400);
       gradient.addColorStop(0.0, "rgb(255, 255, 255)");
       gradient.addColorStop(0.5, "rgb(65, 105, 225)");
-
+  
       const myChart = new Chart(ctx, {
         type: "line",
         data: {
@@ -176,12 +177,21 @@ export default function LogbookId() {
           },
         },
       });
-
+  
       return () => {
         myChart.destroy();
       };
     }
-  }, [loading, data.logdepthtimes]);
+  }, [loading, data.log && data.log.logdepthtimes]);
+  
+  const handleDownload = (imageUrl) => {
+    const link = document.createElement("a");
+    link.href = imageUrl;
+    link.download = "downloaded_image.png"; 
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <>
@@ -193,37 +203,52 @@ export default function LogbookId() {
         <>
           <div className="container mx-auto px-5 py-10">
             <Link to="/">
-              {" "}
               <IoArrowBackSharp className="w-6 h-6" />
             </Link>
 
             <h1 className="text-blue-400 font-bold md:text-center md:text-2xl mt-6 font-spoka-han">
-              {data.logbookentry && data.logbookentry.member.Name}'s log
+              {data.log &&
+                data.log.logbookentry &&
+                data.log.logbookentry.member &&
+                data.log.logbookentry.member.Name}
+              's log
             </h1>
+
             <p className="my-2 text-3xl md:text-center pangram">
-              {data.logbookentry && data.logbookentry.divingmode.Name} diving #
-              {data.id}
+              {data.log &&
+                data.log.logbookentry &&
+                data.log.logbookentry.divingmode &&
+                data.log.logbookentry.divingmode.Name}{" "}
+              diving #{data.log && data.log.id}
             </p>
-            <div className="flex gap-3 md:justify-center">
+
+            <div className="flex gap-6 md:justify-center">
               <div className="">
-                {data && data.StartsAt && data.StartsAt.split(" ")[0] && (
-                  <span
-                    className="text-sm font-semibold pangram"
-                    style={{ whiteSpace: "nowrap" }}
-                  >
-                    {data && data.StartsAt && data.StartsAt.split(" ")[0]}
-                  </span>
-                )}
+                {data.log &&
+                  data.log.StartsAt &&
+                  data.log.StartsAt.split(" ")[0] && (
+                    <span
+                      className="text-sm font-semibold pangram"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
+                      {data.log &&
+                        data.log.StartsAt &&
+                        data.log.StartsAt.split(" ")[0]}
+                    </span>
+                  )}
               </div>
               <div className="">
                 <span className="text-sm font-semibold pangram">
-                  {data && data.divesite && data.divesite.Nation},
+                  {data.log && data.log.divesite && data.log.divesite.Nation},
                 </span>
                 <span className="text-sm font-semibold ml-1 pangram">
-                  {data && data.divesite && data.divesite.SiteLocation},
+                  {data.log &&
+                    data.log.divesite &&
+                    data.log.divesite.SiteLocation}
+                  ,
                 </span>
                 <span className="text-sm font-semibold ml-1 pangram">
-                  {data && data.divesite && data.divesite.SiteName}
+                  {data.log && data.log.divesite && data.log.divesite.SiteName}
                 </span>
               </div>
             </div>
@@ -295,9 +320,10 @@ export default function LogbookId() {
             </div>
           </div>
           <div className="mt-4 relative gap-y-2 flex flex-col  items-center ">
-            {data.logdepthtimes &&
-              data.logdepthtimes.map((entry, index) => (
-                <div key={index} className="relative ">
+            {data.log &&
+              data.log.logdepthtimes &&
+              data.log.logdepthtimes.map((entry, index) => (
+                <div key={index} className="relative">
                   <img
                     src={
                       entry.media && entry.media.length > 0
@@ -308,13 +334,29 @@ export default function LogbookId() {
                     width={1000}
                     className="rounded-xl"
                   />
-                  <img
-                    src={download}
-                    alt="Download"
-                    width={20}
-                    height={20}
-                    className="absolute top-3 right-5"
-                  />
+                  {isDownloadable === true &&(
+                     <img
+                     src={download}
+                     alt="Download"
+                     width={20}
+                     height={20}
+                     className="absolute top-3 right-5"
+                     onClick={() => {
+                       if (
+                         entry.media &&
+                         entry.media.length > 0 &&
+                         entry.media[0].FileUrl
+                       ) {
+                         handleDownload(entry.media[0].FileUrl);
+                       }
+                     }}
+                   />
+
+
+
+
+                  )}
+                 
                 </div>
               ))}
           </div>
