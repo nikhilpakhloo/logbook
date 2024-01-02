@@ -41,8 +41,8 @@ export default function LogbookId() {
     fetchData();
   }, [shareId, logid]);
   console.log("data", data);
-const {isDownloadable} = data
-console.log("download4545", isDownloadable)
+  const { isDownloadable } = data;
+  // console.log("download4545", isDownloadable)
   // const plotData = [];
 
   // time.forEach((elapsedTime, index) => {
@@ -70,10 +70,10 @@ console.log("download4545", isDownloadable)
 
   const time =
     data.logdepthtimes && data.logdepthtimes.map((item) => item.ElapsedTime);
-  console.log("time", time);
+  // console.log("time", time);
   const depth =
     data.logdepthtimes && data.logdepthtimes.map((item) => item.Depth);
-  console.log("depth", depth);
+  // console.log("depth", depth);
   const Skeleton = () => (
     <div className="container mx-auto px-5 py-10">
       <div className="flex items-center">
@@ -115,11 +115,11 @@ console.log("download4545", isDownloadable)
   useEffect(() => {
     if (!loading && data.log && data.log.logdepthtimes) {
       const ctx = chartRef.current.getContext("2d");
-  
+
       const gradient = ctx.createLinearGradient(0, 0, 0, 400);
       gradient.addColorStop(0.0, "rgb(255, 255, 255)");
       gradient.addColorStop(0.5, "rgb(65, 105, 225)");
-  
+
       const myChart = new Chart(ctx, {
         type: "line",
         data: {
@@ -177,17 +177,17 @@ console.log("download4545", isDownloadable)
           },
         },
       });
-  
+
       return () => {
         myChart.destroy();
       };
     }
   }, [loading, data.log && data.log.logdepthtimes]);
-  
+
   const handleDownload = (imageUrl) => {
     const link = document.createElement("a");
     link.href = imageUrl;
-    link.download = "downloaded_image.png"; 
+    link.download = "downloaded_image.png";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -206,11 +206,11 @@ console.log("download4545", isDownloadable)
               <IoArrowBackSharp className="w-6 h-6" />
             </Link>
 
-            <h1 className="text-blue-400 font-bold md:text-center md:text-2xl mt-6 font-spoka-han">
+            <h1 className="text-blue-400 font-bold md:text-center md  :text-2xl mt-6 font-spoka-han ">
               {data.log &&
                 data.log.logbookentry &&
-                data.log.logbookentry.member &&
-                data.log.logbookentry.member.Name}
+                data.log.logbookentry.divingmode &&
+                data.log.logbookentry.divingmode.Name}
               's log
             </h1>
 
@@ -315,11 +315,13 @@ console.log("download4545", isDownloadable)
                 </div>
               ))}
             </div>
-            <div className="h-40 md:h-96 md:w-auto mt-12 flex justify-center w-full ">
-              <canvas id="myChart" ref={chartRef}></canvas>
+            <div className="w-100 flex justify-center md:-mt-52">
+              <div className=" md:w-[400px] w-[300px] mt-12  ">
+                <canvas id="myChart" ref={chartRef}></canvas>
+              </div>
             </div>
           </div>
-          <div className="mt-4 relative gap-y-2 flex flex-col  items-center ">
+          <div className="mt-4 relative gap-y-2 gap-10 flex md:flex-row flex-wrap flex-col  items-center md:justify-center ">
             {data.log &&
               data.log.logdepthtimes &&
               data.log.logdepthtimes.map((entry, index) => (
@@ -331,32 +333,27 @@ console.log("download4545", isDownloadable)
                         : ""
                     }
                     alt={`Image ${index}`}
-                    width={1000}
+                    width={300}
                     className="rounded-xl"
                   />
-                  {isDownloadable === true &&(
-                     <img
-                     src={download}
-                     alt="Download"
-                     width={20}
-                     height={20}
-                     className="absolute top-3 right-5"
-                     onClick={() => {
-                       if (
-                         entry.media &&
-                         entry.media.length > 0 &&
-                         entry.media[0].FileUrl
-                       ) {
-                         handleDownload(entry.media[0].FileUrl);
-                       }
-                     }}
-                   />
-
-
-
-
+                  {isDownloadable === true && (
+                    <img
+                      src={download}
+                      alt="Download"
+                      width={20}
+                      height={20}
+                      className="absolute top-3 right-5"
+                      onClick={() => {
+                        if (
+                          entry.media &&
+                          entry.media.length > 0 &&
+                          entry.media[0].FileUrl
+                        ) {
+                          handleDownload(entry.media[0].FileUrl);
+                        }
+                      }}
+                    />
                   )}
-                 
                 </div>
               ))}
           </div>

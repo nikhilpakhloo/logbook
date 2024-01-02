@@ -12,7 +12,7 @@ export default function LogbookShare() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://stagingapi.diveroid.com/v3/log/share/bdb0bd2a-e504-4ee8-b91a-05f56cecf738",
+          "https://stagingapi.diveroid.com/v3/log/share/28987bcf-039a-42bc-950b-2188f6b72ebf",
           // `https://stagingapi.diveroid.com/v3/log/share/${id}`,
           {
             method: "GET",
@@ -56,20 +56,20 @@ export default function LogbookShare() {
   );
   const memberName =
     data && data.list
-      ? data.list.map((item) => item.logbookentry.member.Name)
+      ? data.list.map((item) => item.logbookentry.divingmode.Name)
       : [];
   const { isdownloadable } = data;
   console.log("download", isdownloadable);
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 xl:px-48 xl:py-8">
         <h1 className="text-2xl font-bold mb-3 md:text-center">Diveroid</h1>
         <p className="mb-4 text-[28px] pr-12 md:text-center font-spoka-han">
           Take a look at {memberName}'s Dive Log
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:mt-10">
+        <div className="flex flex-col md:flex-row md:flex-wrap justify-center md:mt-10 ">
           {loading
             ? Array.from({ length: 20 }).map((_, index) => (
                 <Skeleton key={index} />
@@ -77,45 +77,46 @@ export default function LogbookShare() {
             : data.list &&
               data.list.map((item, index) => (
                 <Link
-                  to={`/detail/bdb0bd2a-e504-4ee8-b91a-05f56cecf738/${item.id}`}
-                  // to={`/detail/${id}/${item.id}`}
+                  to={`/detail/28987bcf-039a-42bc-950b-2188f6b72ebf/${item.id}`}
                   key={index}
                 >
-                  <div className="p-2 rounded-md flex mt-5">
-                    <div className="flex justify-between ">
-                      <img
-                        src={
-                          item.logdepthtimes &&
-                          item.logdepthtimes[0]?.media[0]?.FileUrl
-                        }
-                        alt=""
-                        width={100}
-                        height={100}
-                        className="rounded-lg"
-                      />
-                      <div className="flex flex-col mx-5">
-                        <span className="pangram">
-                          {item.CreatedAt.split(" ")[0]}
-                        </span>
-                        <span className="font-bold pangram1 ">
-                          {item.logbookentry &&
-                            item.logbookentry.divingmode.Name}{" "}
-                          #{item.id}
-                        </span>
-                        <span className="text-gray-400  mt-1  spoka">
-                          {item.divesite && item.divesite.SiteName
-                            ? item.divesite.SiteName
-                            : ""}{" "}
-                        </span>
-                      </div>
-                      <div className="  flex items-center">
-                        <FaAngleRight />
-                      </div>
-                    </div>
+                  <div className="p-2 rounded-md flex flex-col  md:flex-row mt-5 md:mr-8 gap-5 ">
+                    {item.multiplelogbookshares.map((share, shareIndex) => (
+                      <React.Fragment key={shareIndex}>
+                        <div key={shareIndex} className="flex justify-between">
+                          <img
+                            src={share.logbookmedium?.FileUrl}
+                            alt=""
+                            width={100}
+                            height={100}
+                            className="rounded-lg"
+                          />
+                          <div className="flex flex-col mx-5">
+                            <span className="pangram">
+                              {item.CreatedAt.split(" ")[0]}
+                            </span>
+                            <span className="font-bold pangram1">
+                              {item.logbookentry &&
+                                item.logbookentry.divingmode.Name}{" "}
+                              #{item.id}
+                            </span>
+                            <span className="text-gray-400 mt-1 spoka">
+                              {item.divesite && item.divesite.SiteName
+                                ? item.divesite.SiteName
+                                : ""}
+                            </span>
+                          </div>
+                          <div className="flex items-center">
+                            <FaAngleRight />
+                          </div>
+                        </div>
+                        {shareIndex !==
+                          item.multiplelogbookshares.length - 1 && (
+                          <hr className="border-1 border-gray-200 my-1" />
+                        )}
+                      </React.Fragment>
+                    ))}
                   </div>
-                  {index !== data.length - 1 && (
-                    <hr className="border-1 border-gray-300 mt-2" />
-                  )}
                 </Link>
               ))}
         </div>
