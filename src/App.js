@@ -47,7 +47,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route
-              path="/6f798c97-e8dd-4459-9eab-ac45b3e21d92"
+              path="/229/6f798c97-e8dd-4459-9eab-ac45b3e21d92"
               element={<LogbookShare  data= {data} loading={loading} />}
             />
             <Route path="/detail/:shareId/:logid" element={<LogbookId />} />
