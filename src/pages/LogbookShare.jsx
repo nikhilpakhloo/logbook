@@ -5,10 +5,10 @@ import Download from "./Download";
 
 export default function LogbookShare(props) {
 
-  const {data} = props;
+  const {data,loading} = props;
+
 
   console.log("My data", data)
-  const [loading, setLoading] = useState(false);
 
 
 

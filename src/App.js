@@ -5,10 +5,14 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const { id } = useParams();
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true); // Set loading state to true before making the API call
+
         const response = await fetch(
           "https://stagingapi.diveroid.com/v3/log/share/28987bcf-039a-42bc-950b-2188f6b72ebf",
           // `https://stagingapi.diveroid.com/v3/log/share/${id}`,
@@ -24,9 +28,13 @@ function App() {
 
         const jsonData = await response.json();
         setData(jsonData.data);
+        setLoading(false)
        
       } catch (error) {
+        setLoading(false)
+
         console.error("Error fetching data:", error);
+        
       }
     };
 
@@ -40,7 +48,7 @@ function App() {
           <Routes>
             <Route
               path="/229/28987bcf-039a-42bc-950b-2188f6b72ebf"
-              element={<LogbookShare  data= {data} />}
+              element={<LogbookShare  data= {data} loading={loading} />}
             />
             <Route path="/detail/:shareId/:logid" element={<LogbookId />} />
           </Routes>
