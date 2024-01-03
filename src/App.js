@@ -7,15 +7,15 @@ function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { id } = useParams();
+  const { userid, shareid } = useParams();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true); // Set loading state to true before making the API call
+        setLoading(true);
 
         const response = await fetch(
-          "https://stagingapi.diveroid.com/v3/log/share/28987bcf-039a-42bc-950b-2188f6b72ebf",
-          // `https://stagingapi.diveroid.com/v3/log/share/${id}`,
+          `https://stagingapi.diveroid.com/v3/log/share/${shareid}`,
 
           {
             method: "GET",
@@ -28,13 +28,11 @@ function App() {
 
         const jsonData = await response.json();
         setData(jsonData.data);
-        setLoading(false)
-       
+        setLoading(false);
       } catch (error) {
-        setLoading(false)
+        setLoading(false);
 
         console.error("Error fetching data:", error);
-        
       }
     };
 
@@ -47,8 +45,8 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route
-              path="/229/6f798c97-e8dd-4459-9eab-ac45b3e21d92"
-              element={<LogbookShare  data= {data} loading={loading} />}
+              path={`/${userid}/${shareid}`}
+              element={<LogbookShare data={data} loading={loading} />}
             />
             <Route path="/detail/:shareId/:logid" element={<LogbookId />} />
           </Routes>
