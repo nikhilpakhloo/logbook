@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IoArrowBackSharp } from "react-icons/io5";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Chart from "chart.js/auto";
 import { PiTimer } from "react-icons/pi";
 import { CiTempHigh } from "react-icons/ci";
@@ -10,7 +10,7 @@ import Download from "./Download";
 
 import download from "../assets/download.png";
 export default function LogbookId() {
-  const { shareId, logid } = useParams();
+  const { shareid, logid } = useParams();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +19,7 @@ export default function LogbookId() {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://stagingapi.diveroid.com/v3/log/share/detail/${shareId}/${logid}`,
+          `https://stagingapi.diveroid.com/v3/log/share/detail/${shareid}/${logid}`,
           {
             method: "GET",
           }
@@ -39,8 +39,8 @@ export default function LogbookId() {
     };
 
     fetchData();
-  }, [shareId, logid]);
-  console.log("data", data);
+  }, [shareid, logid]);
+  console.log("New data", data);
   const { isDownloadable } = data;
   // console.log("download4545", isDownloadable)
   // const plotData = [];
@@ -192,6 +192,10 @@ export default function LogbookId() {
     link.click();
     document.body.removeChild(link);
   };
+  const navigate = useNavigate()
+  const goBack = ()=>{
+    navigate(-1)
+  }
 
   return (
     <>
@@ -202,9 +206,9 @@ export default function LogbookId() {
       ) : (
         <>
           <div className="container mx-auto px-5 py-10">
-            <Link to="/">
-              <IoArrowBackSharp className="w-6 h-6" />
-            </Link>
+            
+              <IoArrowBackSharp className="w-6 h-6" onClick={goBack} />
+          
 
             <h1 className="text-blue-400 font-bold md:text-center md  :text-2xl mt-6 font-spoka-han ">
               {data.log &&

@@ -4,15 +4,11 @@ import { Link, useParams } from "react-router-dom";
 import Download from "./Download";
 
 export default function LogbookShare(props) {
+  const { data, loading, shareid, userid } = props;
 
-  const {data,loading,shareid} = props;
-
-
-  console.log("My data", data)
-  console.log("SHare id", shareid)
-
-
-
+  console.log("My data", data);
+  console.log("SHare id", shareid);
+  console.log("Userid", userid)
   const Skeleton = () => (
     <div className="p-2 rounded-md flex animate-pulse">
       <div className="flex">
@@ -52,16 +48,21 @@ export default function LogbookShare(props) {
               ))
             : data.list &&
               data.list.map((item, index) => (
-                <div className="p-2 rounded-md flex flex-col  md:flex-row mt-5 md:mr-8 gap-5 ">
-                  {item.multiplelogbookshares.map((share, shareIndex) => (
-                    <React.Fragment>
-                      <Link
-                        to={`/detail/${shareid}/${item.id}`}
-                        key={index}
-                      >
-                        <div  className="flex justify-between">
+                <div
+                  className="p-2 rounded-md flex flex-col md:flex-row mt-5 md:mr-8 gap-5"
+                  key={index}
+                >
+                  {item.multiplelogbookshares &&
+                    item.multiplelogbookshares.length > 0 && (
+                      <React.Fragment >
+                        <Link to={`/details/${shareid}/${item.id}`}>
+                        <div className="flex justify-between">
                           <img
-                            src={share.logbookmedium?.FileUrl}
+                            src={
+                              item.multiplelogbookshares[0]?.logbookmedium &&
+                              item.multiplelogbookshares[0]?.logbookmedium
+                                .FileUrl
+                            }
                             alt=""
                             width={100}
                             height={100}
@@ -86,12 +87,10 @@ export default function LogbookShare(props) {
                             <FaAngleRight />
                           </div>
                         </div>
-                      </Link>
-                      {shareIndex !== item.multiplelogbookshares.length - 1 && (
-                        <hr className="border-1 border-gray-200 my-1" />
-                      )}
-                    </React.Fragment>
-                  ))}
+                        </Link>
+       
+                      </React.Fragment>
+                    )}
                 </div>
               ))}
         </div>

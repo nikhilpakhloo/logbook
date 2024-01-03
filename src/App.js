@@ -13,7 +13,7 @@ function App() {
               path={`/:userid/:shareid`}
               element={<LogbookShareWrapper />}
             />
-            <Route path="/detail/:shareId/:logid" element={<LogbookId />} />
+            <Route path="/details/:shareid/:logid" element={<LogbookId />} />
           </Routes>
         </BrowserRouter>
       </div>
@@ -56,7 +56,7 @@ function LogbookShareWrapper() {
     fetchData();
   }, [shareid]);
 
-  return <LogbookShare data={data} loading={loading} shareid={shareid} />;
+  return <LogbookShare data={data} loading={loading} shareid={shareid} userid= {userid} />;
 }
 
 export default App;
