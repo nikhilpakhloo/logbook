@@ -9,6 +9,10 @@ function App() {
 
   const { userid, shareid } = useParams();
 
+
+  console.log("UserId", userid)
+  console.log("Shareid", shareid)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
