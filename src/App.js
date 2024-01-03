@@ -4,14 +4,30 @@ import { BrowserRouter, Route, Routes, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  return (
+    <>
+      <div className="app">
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/:userid/:shareid"
+              element={<LogbookShareWrapper />}
+            />
+            <Route path="/detail/:shareId/:logid" element={<LogbookId />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </>
+  );
+}
 
+function LogbookShareWrapper() {
   const { userid, shareid } = useParams();
 
-
-  console.log("UserId", userid)
-  console.log("Shareid", shareid)
+  console.log("Share id", shareid)
+  console.log("Userid", userid)
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,7 +36,6 @@ function App() {
 
         const response = await fetch(
           `https://stagingapi.diveroid.com/v3/log/share/${shareid}`,
-
           {
             method: "GET",
           }
@@ -35,29 +50,14 @@ function App() {
         setLoading(false);
       } catch (error) {
         setLoading(false);
-
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, []);
-  console.log(data);
-  return (
-    <>
-      <div className="app ">
-        <BrowserRouter>
-          <Routes>
-            <Route
-              path={`/${userid}/${shareid}`}
-              element={<LogbookShare data={data} loading={loading} />}
-            />
-            <Route path="/detail/:shareId/:logid" element={<LogbookId />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
-    </>
-  );
+  }, [shareid]); // Fetch data whenever shareid changes
+
+  return <LogbookShare data={data} loading={loading} />;
 }
 
 export default App;
