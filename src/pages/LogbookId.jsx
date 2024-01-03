@@ -12,6 +12,7 @@ import download from "../assets/download.png";
 export default function LogbookId() {
   const { shareid, logid } = useParams();
   const [data, setData] = useState([]);
+  const [img, setImg] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -37,10 +38,32 @@ export default function LogbookId() {
         setLoading(false);
       }
     };
+    const fetchData2 = async () => {
+      try {
+        const response = await fetch(
+          `https://stagingapi.diveroid.com/v3/log/share/one-logbook/${shareid}`,
+          {
+            method: "GET",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const jsonData = await response.json();
+        // Do something with the data from the second API call
+        setImg(jsonData.data);
+      } catch (error) {
+        console.error("Error fetching data from second API:", error);
+      }
+    };
+    fetchData2();
 
     fetchData();
   }, [shareid, logid]);
-  console.log("New data", data);
+  console.log("Image data", img);
+
   const { isDownloadable } = data;
   // console.log("download4545", isDownloadable)
   // const plotData = [];
@@ -192,10 +215,10 @@ export default function LogbookId() {
     link.click();
     document.body.removeChild(link);
   };
-  const navigate = useNavigate()
-  const goBack = ()=>{
-    navigate(-1)
-  }
+  const navigate = useNavigate();
+  const goBack = () => {
+    navigate(-1);
+  };
 
   return (
     <>
@@ -206,9 +229,7 @@ export default function LogbookId() {
       ) : (
         <>
           <div className="container mx-auto px-5 py-10">
-            
-              <IoArrowBackSharp className="w-6 h-6" onClick={goBack} />
-          
+            <IoArrowBackSharp className="w-6 h-6 cursor-pointer" onClick={goBack}  />
 
             <h1 className="text-blue-400 font-bold md:text-center md  :text-2xl mt-6 font-spoka-han ">
               {data.log &&
@@ -257,7 +278,7 @@ export default function LogbookId() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-5 mt-8 md:place-items-center">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mt-8 md:place-items-center">
               {Array.from({ length: 4 }).map((_, index) => (
                 <div key={index}>
                   <div className="p-2 rounded-md bg-white ">
@@ -319,43 +340,32 @@ export default function LogbookId() {
                 </div>
               ))}
             </div>
-            <div className="w-100 flex justify-center md:-mt-52">
+            <div className="w-100 flex justify-center ">
               <div className=" md:w-[400px] w-[300px] mt-12  ">
                 <canvas id="myChart" ref={chartRef}></canvas>
               </div>
             </div>
           </div>
-          <div className="mt-4 relative gap-y-2 gap-10 flex md:flex-row flex-wrap flex-col  items-center md:justify-center ">
-            {data.log &&
-              data.log.logdepthtimes &&
-              data.log.logdepthtimes.map((entry, index) => (
+          <div className="mt-4 relative gap-y-2 gap-10 flex md:flex-row flex-wrap flex-col items-center md:justify-center">
+            {img.sharemedia &&
+              img.sharemedia.map((photo, index) => (
                 <div key={index} className="relative">
                   <img
-                    src={
-                      entry.media && entry.media.length > 0
-                        ? entry.media[0].FileUrl
-                        : ""
-                    }
+                    src={photo.logbookmedium.FileUrl}
                     alt={`Image ${index}`}
                     width={300}
                     className="rounded-xl"
                   />
-                  {isDownloadable === true && (
+                  {isDownloadable && (
                     <img
                       src={download}
                       alt="Download"
                       width={20}
                       height={20}
-                      className="absolute top-3 right-5"
-                      onClick={() => {
-                        if (
-                          entry.media &&
-                          entry.media.length > 0 &&
-                          entry.media[0].FileUrl
-                        ) {
-                          handleDownload(entry.media[0].FileUrl);
-                        }
-                      }}
+                      className="absolute top-3 right-5 cursor-pointer"
+                      onClick={() =>
+                        handleDownload(photo.logbookmedium.FileUrl)
+                      }
                     />
                   )}
                 </div>
