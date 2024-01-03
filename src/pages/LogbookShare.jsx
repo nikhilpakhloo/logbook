@@ -3,38 +3,14 @@ import { FaAngleRight } from "react-icons/fa6";
 import { Link, useParams } from "react-router-dom";
 import Download from "./Download";
 
-export default function LogbookShare() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  // const { id } = useParams();
+export default function LogbookShare(props) {
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://stagingapi.diveroid.com/v3/log/share/28987bcf-039a-42bc-950b-2188f6b72ebf",
-          // `https://stagingapi.diveroid.com/v3/log/share/${id}`,
-          {
-            method: "GET",
-          }
-        );
+  const {data} = props;
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+  console.log("My data", data)
+  const [loading, setLoading] = useState(false);
 
-        const jsonData = await response.json();
-        setData(jsonData.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setLoading(false);
-      }
-    };
 
-    fetchData();
-  }, []);
-  console.log(data);
 
   const Skeleton = () => (
     <div className="p-2 rounded-md flex animate-pulse">
@@ -59,7 +35,6 @@ export default function LogbookShare() {
       ? data.list.map((item) => item.logbookentry.divingmode.Name)
       : [];
   const { isdownloadable } = data;
-  console.log("download", isdownloadable);
 
   return (
     <>
@@ -76,13 +51,13 @@ export default function LogbookShare() {
               ))
             : data.list &&
               data.list.map((item, index) => (
-                <Link
-                  to={`/detail/28987bcf-039a-42bc-950b-2188f6b72ebf/${item.id}`}
-                  key={index}
-                >
-                  <div className="p-2 rounded-md flex flex-col  md:flex-row mt-5 md:mr-8 gap-5 ">
-                    {item.multiplelogbookshares.map((share, shareIndex) => (
-                      <React.Fragment key={shareIndex}>
+                <div className="p-2 rounded-md flex flex-col  md:flex-row mt-5 md:mr-8 gap-5 ">
+                  {item.multiplelogbookshares.map((share, shareIndex) => (
+                    <React.Fragment key={shareIndex}>
+                      <Link
+                        to={`/detail/28987bcf-039a-42bc-950b-2188f6b72ebf/${item.id}`}
+                        key={index}
+                      >
                         <div key={shareIndex} className="flex justify-between">
                           <img
                             src={share.logbookmedium?.FileUrl}
@@ -110,14 +85,13 @@ export default function LogbookShare() {
                             <FaAngleRight />
                           </div>
                         </div>
-                        {shareIndex !==
-                          item.multiplelogbookshares.length - 1 && (
-                          <hr className="border-1 border-gray-200 my-1" />
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </Link>
+                      </Link>
+                      {shareIndex !== item.multiplelogbookshares.length - 1 && (
+                        <hr className="border-1 border-gray-200 my-1" />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
               ))}
         </div>
       </div>
