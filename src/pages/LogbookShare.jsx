@@ -5,10 +5,11 @@ import Download from "./Download";
 
 export default function LogbookShare(props) {
 
-  const {data,loading} = props;
+  const {data,loading,shareid} = props;
 
 
   console.log("My data", data)
+  console.log("SHare id", shareid)
 
 
 
@@ -53,12 +54,12 @@ export default function LogbookShare(props) {
               data.list.map((item, index) => (
                 <div className="p-2 rounded-md flex flex-col  md:flex-row mt-5 md:mr-8 gap-5 ">
                   {item.multiplelogbookshares.map((share, shareIndex) => (
-                    <React.Fragment key={shareIndex}>
+                    <React.Fragment>
                       <Link
-                        to={`/detail/28987bcf-039a-42bc-950b-2188f6b72ebf/${item.id}`}
+                        to={`/detail/${shareid}/${item.id}`}
                         key={index}
                       >
-                        <div key={shareIndex} className="flex justify-between">
+                        <div  className="flex justify-between">
                           <img
                             src={share.logbookmedium?.FileUrl}
                             alt=""

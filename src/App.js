@@ -10,7 +10,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route
-              path="/:userid/:shareid"
+              path={`/:userid/:shareid`}
               element={<LogbookShareWrapper />}
             />
             <Route path="/detail/:shareId/:logid" element={<LogbookId />} />
@@ -24,8 +24,7 @@ function App() {
 function LogbookShareWrapper() {
   const { userid, shareid } = useParams();
 
-  console.log("Share id", shareid)
-  console.log("Userid", userid)
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -55,9 +54,9 @@ function LogbookShareWrapper() {
     };
 
     fetchData();
-  }, [shareid]); // Fetch data whenever shareid changes
+  }, [shareid]);
 
-  return <LogbookShare data={data} loading={loading} />;
+  return <LogbookShare data={data} loading={loading} shareid={shareid} />;
 }
 
 export default App;
