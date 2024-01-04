@@ -35,13 +35,15 @@ export default function LogbookShare(props) {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8 xl:px-48 xl:py-8">
-        <img src={logo} alt="" />
-     
-        <div className="w-[350px] h-[72px] mt-4">
-          <p className="text-[28px] leading-[36px] tracking-[0.28px] font-medium  spokasansmedium">
-            Take a look at <br /> {memberName}'s Dive Log
-          </p>
+      <div className="container mx-auto px-4 py-8 xl:px-48 xl:py-8 ">
+        <div className="w-full flex flex-col">
+          <img src={logo} alt="" className="w-[96px] h-[20px] md:w-full" />
+
+          <div className="w-[350px] h-[72px] mt-4 flex md:justify-center md:w-full ">
+            <p className="text-[28px] leading-[36px] tracking-[0.28px] font-medium  spokasansmedium  ">
+              Take a look at <br /> {memberName}'s Dive Log
+            </p>
+          </div>
         </div>
 
         <div className="flex flex-col md:flex-row md:flex-wrap md:justify-center mt-8 md:mt-10  ">
@@ -51,27 +53,22 @@ export default function LogbookShare(props) {
               ))
             : data.list &&
               data.list.map((item, index) => (
-                <div
-                  className="flex  "
-                  key={index}
-                >
+                <div className="flex  " key={index}>
                   {item.multiplelogbookshares &&
                     item.multiplelogbookshares.length > 0 && (
                       <React.Fragment>
                         <Link to={`/details/${shareid}/${item.id}`}>
                           <div className="flex gap-4 ">
                             <div className="w-[110px] h-[76px] ">
-                            <img
-                              src={
-                                item.multiplelogbookshares[0]?.logbookmedium &&
-                                item.multiplelogbookshares[0]?.logbookmedium
-                                  .FileUrl
-                              }
-                              className="rounded-[8px] w-full h-full"
-                           
-                            
-                            
-                            />
+                              <img
+                                src={
+                                  item.multiplelogbookshares[0]
+                                    ?.logbookmedium &&
+                                  item.multiplelogbookshares[0]?.logbookmedium
+                                    .FileUrl
+                                }
+                                className="rounded-[8px] w-full h-full"
+                              />
                             </div>
                             <div className="flex flex-col mt-1.5  ">
                               <span className="pangrammedium  text-[13px] leading-[13px] ">
@@ -88,18 +85,13 @@ export default function LogbookShare(props) {
                                   : ""}
                               </span>
                             </div>
-                            <div className="right-4 absolute mt-[26px]" >
-                              <img src={arrowright} alt=""  />
+                            <div className="right-4 absolute mt-[26px]">
+                              <img src={arrowright} alt="" />
                             </div>
-                            
                           </div>
-                          <hr className="border-1 w-[345px] my-3"/>
-
+                          <hr className="border-1 w-[345px] my-3" />
                         </Link>
-                        
-                        
                       </React.Fragment>
-                      
                     )}
                 </div>
               ))}
