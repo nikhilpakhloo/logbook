@@ -62,7 +62,7 @@ export default function LogbookId() {
 
     fetchData();
   }, [shareid, logid]);
-  console.log("Image data", img);
+  // console.log(" data", data);
 
   // console.log("download4545", isDownloadable)
   // const plotData = [];
