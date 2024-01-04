@@ -37,9 +37,11 @@ export default function LogbookShare(props) {
     <>
       <div className="container mx-auto px-4 py-8 xl:px-48 xl:py-8">
         <img src={logo} alt="" />
-     
+        {/* <p className="mb-4 text-[28px] pr-12 md:text-center font-spoka-han">
+          Take a look at {memberName}'s Dive Log
+        </p> */}
         <div className="w-[350px] h-[72px] mt-4">
-          <p className="text-[28px] leading-[36px] tracking-[0.28px] font-medium  spokasansmedium">
+          <p className="text-[28px] leading-[36px] tracking-[-0.28px] font-medium ">
             Take a look at <br /> {memberName}'s Dive Log
           </p>
         </div>
@@ -67,39 +69,33 @@ export default function LogbookShare(props) {
                                 item.multiplelogbookshares[0]?.logbookmedium
                                   .FileUrl
                               }
-                              className="rounded-[8px] w-full h-full"
+                              className="rounded-[8px]"
                            
                             
                             
                             />
                             </div>
-                            <div className="flex flex-col mt-1.5  ">
-                              <span className="pangrammedium  text-[13px] leading-[13px] ">
+                            <div className="flex flex-col mt-1 ">
+                              <span className="pangram1 text-[13px] leading-[13px] font-medium">
                                 {item.CreatedAt.split(" ")[0]}
                               </span>
-                              <span className=" pangrammedium text-[18px] leading-[28px]">
+                              <span className=" pangram1 text-[18px] leading-[28px]">
                                 {item.logbookentry &&
                                   item.logbookentry.divingmode.Name}{" "}
                                 #{item.id}
                               </span>
-                              <span className="text-[13px]  leading-[16px]  spokanregular mt-2 tracking-[0.13px]">
+                              <span className="text-gray-400 text-[13px] font-normal leading-[16px]  font-spoka-han">
                                 {item.divesite && item.divesite.SiteName
                                   ? item.divesite.SiteName
                                   : ""}
                               </span>
                             </div>
-                            <div className="right-4 absolute mt-[26px]" >
+                            <div className="right-4 absolute mt-4" >
                               <img src={arrowright} alt=""  />
                             </div>
-                            
                           </div>
-                          <hr className="border-1 w-[345px] my-3"/>
-
                         </Link>
-                        
-                        
                       </React.Fragment>
-                      
                     )}
                 </div>
               ))}

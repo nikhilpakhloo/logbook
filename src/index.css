@@ -3,50 +3,62 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: "SpokaHanSansNeo-Regular";
-    src: url("./fonts/SpoqaHanSansNeo-Regular.ttf");
-    
+  font-family: "SpokaHanSansNeo-Regular";
+  src: url("./fonts/SpoqaHanSansNeo-Regular.ttf");
 }
 @font-face {
-    font-family: "pangram";
-    src: url("./fonts/PPPangramSans-Medium.ttf");
-    
+  font-family: "SpokasansMedium";
+  src: url("./fonts/SpoqaHanSansNeo-Medium.ttf");
 }
 @font-face {
-    font-family: "pangram1";
-    src: url("./fonts/PPPangramSans-Bold.otf");
-    
+  font-family: "SpokHanSansNeoBold";
+  src: url("./fonts/SpoqaHanSansNeo-Bold.ttf");
 }
 @font-face {
-    font-family: "SpokHanSansNeo";
-    src: url("./fonts/SpoqaHanSansNeo-Bold.ttf");
-    
+  font-family: "pangramMedium";
+  src: url("./fonts/PPPangramSans-Medium.ttf");
 }
 
-.font-spoka-han {
-    font-family: "SpokaHanSansNeo-Regular";
+.spokasansmedium {
+    font-family: "SpokasansMedium";
     font-weight: 500;
- 
-}
-.pangram {
-    font-family: "pangram";
+  } 
+.pangrammedium{
+
+    font-family:"pangramMedium" ;
     font-weight: 500;
- 
 }
-.pangram1 {
-    font-family: "pangram1";
-    font-weight: 500;
- 
-}
-.spoka {
-    font-family: "SpokaHanSansNeo";
+.pangramregular{
+
+    font-family:"pangramMedium" ;
     font-weight: 400;
- 
+}
+.spokanregular{
+    font-family: "SpokaHanSansNeo-Regular";
+    font-weight: 400;
+    color: #868e96;
+}
+.spokabold{
+    font-family: "SpokHanSansNeoBold";
+    font-weight: 700;
+    color: #188df9;
+}
+/* .font-spoka-han {
+  font-family: "SpokaHanSansNeo-Regular";
+  font-weight: 500;
+}
+.pangramMedium {
+  font-family: "pangram";
+  font-weight: 500;
 }
 
+.spoka {
+  font-family: "SpokaHanSansNeo";
+  font-weight: 400;
+}
+*/
 
-
-li{
-    color: white;
-    list-style-type: none;
+li {
+  color: white;
+  list-style-type: none;
 }

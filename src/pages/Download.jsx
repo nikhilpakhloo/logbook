@@ -30,7 +30,7 @@ export default function Download() {
           >
             <div className="flex items-center">
               <img src={logo} alt="" width={30} height={30} />
-              <span className="ml-2 text-sm font-spoka-han">
+              <span className="ml-2 text-sm ">
                 Enjoy Diving with DIVEROID!
               </span>
             </div>
@@ -40,7 +40,7 @@ export default function Download() {
                 target="_blank"
               >
                 <button className="px-2 py-1 bg-blue-500 rounded-md text-white">
-                  <span className="font-spoka-han">Download</span>
+                  <span className="">Download</span>
                 </button>
               </Link>
             </div>

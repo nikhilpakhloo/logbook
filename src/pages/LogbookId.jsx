@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IoArrowBackSharp } from "react-icons/io5";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Chart from "chart.js/auto";
-import { PiTimer } from "react-icons/pi";
-import { CiTempHigh } from "react-icons/ci";
-import { MdOutlineVerticalAlignBottom } from "react-icons/md";
-import { PiGasPump } from "react-icons/pi";
+import depthlogo from "../assets/ic_l_MaxDepth_b_24.svg";
+import divingtime from "../assets/ic_l_DivingTime_b_24.svg";
+import temp from "../assets/ic_l_WaterTemperature_b_24.svg";
+import gas from "../assets/ic_l_air_b_24.svg";
 import Download from "./Download";
+import back from "../assets/ic_l_back_24.svg";
 
 import download from "../assets/download.png";
 export default function LogbookId() {
@@ -64,7 +64,6 @@ export default function LogbookId() {
   }, [shareid, logid]);
   console.log("Image data", img);
 
-  const { isDownloadable } = data;
   // console.log("download4545", isDownloadable)
   // const plotData = [];
 
@@ -76,12 +75,7 @@ export default function LogbookId() {
   // });
 
   const text = ["Max Depth", "Dive Time", "Bottom Temp", "Gas Type"];
-  const textLogo = [
-    <MdOutlineVerticalAlignBottom />,
-    <PiTimer />,
-    <CiTempHigh />,
-    <PiGasPump />,
-  ];
+  const textLogo = [depthlogo, divingtime, temp, gas];
   const textUnits = [
     data.log && data.log.MaxDepth ? `${data.log.MaxDepth}` : "",
     data.log && data.log.DiveTime ? `${data.log.DiveTime}` : "",
@@ -93,10 +87,8 @@ export default function LogbookId() {
 
   const time =
     data.logdepthtimes && data.logdepthtimes.map((item) => item.ElapsedTime);
-  // console.log("time", time);
   const depth =
     data.logdepthtimes && data.logdepthtimes.map((item) => item.Depth);
-  // console.log("depth", depth);
   const Skeleton = () => (
     <div className="container mx-auto px-5 py-10">
       <div className="flex items-center">
@@ -229,9 +221,9 @@ export default function LogbookId() {
       ) : (
         <>
           <div className="container mx-auto px-5 py-10">
-            <IoArrowBackSharp className="w-6 h-6 cursor-pointer" onClick={goBack}  />
+            <img src={back} alt="" onClick={goBack} />
 
-            <h1 className="text-blue-400 font-bold md:text-center md  :text-2xl mt-6 font-spoka-han ">
+            <h1 className=" font-bold md:text-center text-[15px] leading-[20px] mt-6 spokabold tracking-[0.15px] ">
               {data.log &&
                 data.log.logbookentry &&
                 data.log.logbookentry.divingmode &&
@@ -239,7 +231,7 @@ export default function LogbookId() {
               's log
             </h1>
 
-            <p className="my-2 text-3xl md:text-center pangram">
+            <p className="my-2 text-[28px] leading-[36px] md:text-center pangrammedium">
               {data.log &&
                 data.log.logbookentry &&
                 data.log.logbookentry.divingmode &&
@@ -253,7 +245,7 @@ export default function LogbookId() {
                   data.log.StartsAt &&
                   data.log.StartsAt.split(" ")[0] && (
                     <span
-                      className="text-sm font-semibold pangram"
+                      className="text-[13px] leading-[18px]  pangrammedium"
                       style={{ whiteSpace: "nowrap" }}
                     >
                       {data.log &&
@@ -263,72 +255,72 @@ export default function LogbookId() {
                   )}
               </div>
               <div className="">
-                <span className="text-sm font-semibold pangram">
+                <span className="text-[13px] leading-[18px]  pangrammedium">
                   {data.log && data.log.divesite && data.log.divesite.Nation},
                 </span>
-                <span className="text-sm font-semibold ml-1 pangram">
+                <span className="text-[13px] leading-[18px]  pangrammedium">
                   {data.log &&
                     data.log.divesite &&
                     data.log.divesite.SiteLocation}
                   ,
                 </span>
-                <span className="text-sm font-semibold ml-1 pangram">
+                <span className="text-[13px] leading-[18px]  pangrammedium">
                   {data.log && data.log.divesite && data.log.divesite.SiteName}
                 </span>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mt-8 md:place-items-center">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-5 mt-8 md:place-items-center">
               {Array.from({ length: 4 }).map((_, index) => (
                 <div key={index}>
                   <div className="p-2 rounded-md bg-white ">
                     <div className="flex items-center">
                       <div className="flex flex-col ">
-                        <span className="font-semibold text-gray-400 text-sm font-spoka-han">
+                        <span className="font-semibold tracking-[0.13px] leading-[18px] text-[13px] spokanregular">
                           {text[index]}
                         </span>
                         <div className="flex items-center">
-                          <span className="">
-                            <span className="text-2xl ">{textLogo[index]}</span>{" "}
-                          </span>
+                       
+                            <img src={textLogo[index]} alt="" className="" />
+                      
                           <span className="text-xl mx-2">
                             {index === 0 && (
                               <span className="">
-                                <span className="text-3xl pangram">
+                                <span className="text-[28px] leading-[36px] pangramregular">
                                   {textUnits[index]}
                                 </span>
-                                <span className="text-sm mx-1">
-                                  <span className="text-lg">m</span>
+                                <span className="mx-1">
+                                  <span className="pangrammedium text-[18px] leading-[28px]">m</span>
                                 </span>
                               </span>
                             )}
                             {index === 1 && (
                               <span className="">
-                                <span className="text-3xl">
+                                <span className="text-[28px] leading-[36px] pangramregular">
                                   {textUnits[index]}
                                 </span>
-                                <span className="text-sm mx-1">
-                                  <span className="text-lg">min</span>
+                                <span className=" mx-1">
+                                  <span className="pangrammedium text-[18px] leading-[28px]">min</span>
                                 </span>
                               </span>
                             )}
                             {index === 2 && (
                               <span className="">
-                                <span className="text-3xl">
+                                <span className="text-[28px] leading-[36px] pangramregular">
                                   {textUnits[index]}
                                 </span>
-                                <span className="text-sm mx-1">
-                                  <span className="text-lg">℃</span>
+                                <span className="mx-1">
+                                  <span className="pangrammedium text-[18px] leading-[28px]">℃</span>
                                 </span>
                               </span>
                             )}
                             {index === 3 && (
                               <span className="">
-                                <span className="text-3xl">
+                                <span className="text-[28px] leading-[36px] pangramregular">
                                   {textUnits[index]}
                                 </span>
-                                <span className="text-sm mx-1">
-                                  <span className="text-lg"></span>
+                                <span className=" mx-1">
+                                  <span className="pangrammedium text-[18px] leading-[28px]"></span>
                                 </span>
                               </span>
                             )}
@@ -341,7 +333,7 @@ export default function LogbookId() {
               ))}
             </div>
             <div className="w-100 flex justify-center ">
-              <div className=" md:w-[400px] w-[300px] mt-12  ">
+              <div className=" md:w-[500px] w-[300px] mt-12  ">
                 <canvas id="myChart" ref={chartRef}></canvas>
               </div>
             </div>
@@ -353,10 +345,10 @@ export default function LogbookId() {
                   <img
                     src={photo.logbookmedium.FileUrl}
                     alt={`Image ${index}`}
-                    width={300}
-                    className="rounded-xl"
+                    // width={300}
+                    className="w-full"
                   />
-                  {isDownloadable && (
+                  {photo.isDownloadable && (
                     <img
                       src={download}
                       alt="Download"
