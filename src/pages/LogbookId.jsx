@@ -220,7 +220,7 @@ export default function LogbookId() {
         </>
       ) : (
         <>
-          <div className="container mx-auto px-5 py-10">
+          <div className="container mx-auto px-5 py-10 max-w-[600px]">
             <img src={back} alt="" onClick={goBack} />
 
             <h1 className=" font-bold md:text-center text-[15px] leading-[20px] mt-6 spokabold tracking-[0.15px] ">
@@ -338,15 +338,14 @@ export default function LogbookId() {
               </div>
             </div>
           </div>
-          <div className="mt-4 relative gap-y-2 gap-10 flex md:flex-row flex-wrap flex-col items-center md:justify-center">
+          <div className="mt-4 relative gap-y-2 gap-10 flex flex-col flex-wrap items-center md:justify-center ">
             {img.sharemedia &&
               img.sharemedia.map((photo, index) => (
-                <div key={index} className="relative">
+                <div key={index} className="relative max-w-[600px] ">
                   <img
                     src={photo.logbookmedium.FileUrl}
                     alt={`Image ${index}`}
-                    // width={300}
-                    className="w-full"
+               
                   />
                   {photo.isDownloadable && (
                     <img
