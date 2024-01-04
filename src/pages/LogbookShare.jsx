@@ -7,9 +7,7 @@ import logo from "../assets/img_logo_96.svg";
 export default function LogbookShare(props) {
   const { data, loading, shareid, userid } = props;
 
-  // console.log("My data", data);
-  // console.log("SHare id", shareid);
-  // console.log("Userid", userid);
+
   const Skeleton = () => (
     <div className="p-2 rounded-md flex animate-pulse">
       <div className="flex">

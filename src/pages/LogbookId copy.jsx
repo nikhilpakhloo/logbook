@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Chart from "chart.js/auto";
 import depthlogo from "../assets/ic_l_MaxDepth_b_24.svg";
 import divingtime from "../assets/ic_l_DivingTime_b_24.svg";
 import temp from "../assets/ic_l_WaterTemperature_b_24.svg";
@@ -8,8 +9,6 @@ import Download from "./Download";
 import back from "../assets/ic_l_back_24.svg";
 
 import download from "../assets/download.png";
-import ApexCharts from "apexcharts";
-
 export default function LogbookId() {
   const { shareid, logid } = useParams();
   const [data, setData] = useState([]);
@@ -63,6 +62,15 @@ export default function LogbookId() {
     fetchData();
   }, [shareid, logid]);
 
+  // const plotData = [];
+
+  // time.forEach((elapsedTime, index) => {
+  //     plotData.push({
+  //         x: elapsedTime ? elapsedTime.toFixed(2) : '0.00',
+  //         y: depth[index]
+  //     });
+  // });
+
   const text = ["Max Depth", "Dive Time", "Bottom Temp", "Gas Type"];
   const textLogo = [depthlogo, divingtime, temp, gas];
   const textUnits = [
@@ -74,6 +82,10 @@ export default function LogbookId() {
     data.log && data.log.GasType ? `${data.log.GasType}` : "",
   ];
 
+  const time =
+    data.logdepthtimes && data.logdepthtimes.map((item) => item.ElapsedTime);
+  const depth =
+    data.logdepthtimes && data.logdepthtimes.map((item) => item.Depth);
   const Skeleton = () => (
     <div className="container mx-auto px-5 py-10">
       <div className="flex items-center">
@@ -110,56 +122,81 @@ export default function LogbookId() {
       <div className="mt-4 flex justify-center flex-wrap gap-y-2"></div>
     </div>
   );
-
-  const options = {
-    chart: {
-      type: "area",
-      fill: true,
-    },
-    series: [
-      {
-        data: [
-          { x: "0.00", y: 0 },
-          { x: "10.00", y: 12 },
-          { x: "12.00", y: 10 },
-          { x: "20.00", y: 24 },
-          { x: "30.00", y: 12 },
-          { x: "42.00", y: 0 },
-        ],
-      },
-    ],
-    xaxis: {
-      categories: ["0.00", "10.00", "20.00", "30.00", "42.00"],
-    },
-    yaxis: {
-      categories: [24, 18, 12, 6, 0],
-      reversed: true,
-    },
-    stroke: {
-      curve: "smooth",
-      width: 0,
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        shadeIntensity: 0.1,
-        opacityFrom: 0.1,
-        opacityTo: 1,
-        stops: [0, 90, 100],
-      },
-    },
-  };
+  const chartRef = useRef(null);
 
   useEffect(() => {
-    if (!loading) {
-      const chart = new ApexCharts(document.querySelector("#chart"), options);
-      chart.render();
+    if (!loading && data.log && data.log.logdepthtimes) {
+      const ctx = chartRef.current.getContext("2d");
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0.0, "#F6FBFF");
+      gradient.addColorStop(0.2131, "#BEE0FF");
+      gradient.addColorStop(0.4805, "#3C9EFB");
+      gradient.addColorStop(0.7604, "#5D52CE");
+      gradient.addColorStop(1.0, "#4538C8");
+      
+      const myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          datasets: [
+            {
+              data: [
+                { x: "0.00", y: 0 },
+                { x: "10.00", y: 12 },
+                { x: "20.00", y: 24 },
+                { x: "30.00", y: 12 },
+                { x: "42.00", y: 0 },
+              ],
+              
+              borderColor: gradient,
+              backgroundColor: gradient,
+              lineTension: 0.4,
+              fill: true,
+            },
+          ],
+        },
+        options: {
+          elements: {
+            point: { radius: 0 },
+          },
+          plugins: { legend: { display: false } },
+          scales: {
+         
+            y: {
+              reverse: true,
+              ticks: {
+              
+                
+              
+                stepSize: 6,
+                callback: function (value, index) {
+                  return value + " " + "m";
+                },
+              },
+              grid: {
+                display: true,
+                
+                
+              },
+
+            },
+            x: {
+             
+              grid: {
+                display: false,
+             
+              },
+            
+            },
+          },
+        },
+      });
 
       return () => {
-        chart.destroy();
+        myChart.destroy();
       };
     }
-  }, [loading]);
+  }, [loading, data.log && data.log.logdepthtimes]);
 
   const handleDownload = (imageUrl) => {
     const link = document.createElement("a");
@@ -182,13 +219,8 @@ export default function LogbookId() {
         </>
       ) : (
         <>
-          <div className="container mx-auto px-5  max-w-[600px]">
-            <img
-              src={back}
-              alt=""
-              onClick={goBack}
-              className="cursor-pointer"
-            />
+          <div className="container mx-auto px-5 py-10 max-w-[600px]">
+            <img src={back} alt="" onClick={goBack}  className="cursor-pointer"/>
 
             <h1 className=" font-bold md:text-center text-[15px] leading-[20px] mt-6 spokabold tracking-[0.15px] ">
               {data.log &&
@@ -247,8 +279,9 @@ export default function LogbookId() {
                           {text[index]}
                         </span>
                         <div className="flex items-center">
-                          <img src={textLogo[index]} alt="" className="" />
-
+                       
+                            <img src={textLogo[index]} alt="" className="" />
+                      
                           <span className="text-xl mx-2">
                             {index === 0 && (
                               <span className="">
@@ -256,9 +289,7 @@ export default function LogbookId() {
                                   {textUnits[index]}
                                 </span>
                                 <span className="mx-1">
-                                  <span className="pangrammedium text-[18px] leading-[28px]">
-                                    m
-                                  </span>
+                                  <span className="pangrammedium text-[18px] leading-[28px]">m</span>
                                 </span>
                               </span>
                             )}
@@ -268,9 +299,7 @@ export default function LogbookId() {
                                   {textUnits[index]}
                                 </span>
                                 <span className=" mx-1">
-                                  <span className="pangrammedium text-[18px] leading-[28px]">
-                                    min
-                                  </span>
+                                  <span className="pangrammedium text-[18px] leading-[28px]">min</span>
                                 </span>
                               </span>
                             )}
@@ -280,9 +309,7 @@ export default function LogbookId() {
                                   {textUnits[index]}
                                 </span>
                                 <span className="mx-1">
-                                  <span className="pangrammedium text-[18px] leading-[28px]">
-                                    °C
-                                  </span>
+                                  <span className="pangrammedium text-[18px] leading-[28px]">°C</span>
                                 </span>
                               </span>
                             )}
@@ -292,9 +319,7 @@ export default function LogbookId() {
                                   {textUnits[index]}
                                 </span>
                                 <span className=" mx-1">
-                                  <span className="pangrammedium text-[18px] leading-[28px]">
-                                    EAN 21
-                                  </span>
+                                  <span className="pangrammedium text-[18px] leading-[28px]">EAN 21</span>
                                 </span>
                               </span>
                             )}
@@ -306,17 +331,20 @@ export default function LogbookId() {
                 </div>
               ))}
             </div>
-            <div className="w-full flex justify-center my-5 mx-auto ">
-              <div id="chart" className="md:w-[450px] w-full "></div>
+            <div className="w-100 flex justify-center ">
+              <div className="w-[500px] md:w-[450px] mt-12  ">
+                <canvas id="myChart" ref={chartRef}></canvas>
+              </div>
             </div>
           </div>
           <div className="mt-4 relative gap-y-2 gap-10 flex flex-col flex-wrap items-center md:justify-center ">
             {img.sharemedia &&
               img.sharemedia.map((photo, index) => (
-                <div key={index} className="relative max-w-[500px] ">
+                <div key={index} className="relative max-w-[600px] ">
                   <img
                     src={photo.logbookmedium.FileUrl}
                     alt={`Image ${index}`}
+               
                   />
                   {photo.isDownloadable && (
                     <img
