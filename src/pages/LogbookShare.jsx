@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import arrowright from "../assets/ic_l_ArrowRight_g_16.svg";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Download from "./Download";
 import logo from "../assets/img_logo_96.svg";
 
 export default function LogbookShare(props) {
   const { data, loading, shareid, userid } = props;
+ 
 
 
   const Skeleton = () => (

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import depthlogo from "../assets/ic_l_MaxDepth_b_24.svg";
 import divingtime from "../assets/ic_l_DivingTime_b_24.svg";
@@ -12,6 +12,7 @@ import ApexCharts from "apexcharts";
 
 export default function LogbookId() {
   const { shareid, logid } = useParams();
+ 
   const [data, setData] = useState([]);
   const [img, setImg] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ export default function LogbookId() {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://stagingapi.diveroid.com/v3/log/share/detail/${shareid}/${logid}`,
+          `https://dhavalapi.sjonarrond.is/v3/log/share/detail/${shareid}/${logid}`,
           {
             method: "GET",
           }
@@ -42,7 +43,7 @@ export default function LogbookId() {
     const fetchData2 = async () => {
       try {
         const response = await fetch(
-          `https://stagingapi.diveroid.com/v3/log/share/one-logbook/${shareid}`,
+          `https://dhavalapi.sjonarrond.is/v3/log/share/one-logbook/${shareid}`,
           {
             method: "GET",
           }
