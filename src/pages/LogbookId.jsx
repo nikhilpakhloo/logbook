@@ -12,8 +12,7 @@ import ApexCharts from "apexcharts";
 
 export default function LogbookId() {
   const { shareid, logid } = useParams();
- console.log("shareid", shareid)
- console.log("logid",logid)
+
  
   const [data, setData] = useState([]);
   const [img, setImg] = useState([]);
