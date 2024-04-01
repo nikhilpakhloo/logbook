@@ -22,7 +22,7 @@ export default function LogbookId() {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://dhavalapi.sjonarrond.is/v3/log/share/detail/${shareid}/${logid}`,
+          `https://stagingapi.diveroid.com/v3/log/share/detail/${shareid}/${logid}`,
           {
             method: "GET",
           }
@@ -43,7 +43,7 @@ export default function LogbookId() {
     const fetchData2 = async () => {
       try {
         const response = await fetch(
-          `https://dhavalapi.sjonarrond.is/v3/log/share/one-logbook/${shareid}`,
+          `https://stagingapi.diveroid.com/v3/log/share/one-logbook/${shareid}`,
           {
             method: "GET",
           }
