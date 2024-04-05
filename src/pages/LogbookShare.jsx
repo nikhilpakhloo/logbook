@@ -59,7 +59,7 @@ export default function LogbookShare(props) {
                           <div className="flex gap-4 ">
                             <div className="w-[110px] h-[76px] ">
                             <img
-                                   src={"https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"}
+                                   src={"https://em-content.zobj.net/source/microsoft/379/open-book_1f4d6.png"}
                                    className="rounded-[8px] w-full h-full"/>
                             </div>
                             <div className="flex flex-col mt-1.5  ">
