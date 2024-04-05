@@ -53,14 +53,21 @@ export default function LogbookShare(props) {
             : data.list &&
               data.list.map((item, index) => (
                 <div className="flex  " key={index}>
-                  { true && (
+                  {item.multiplelogbookshares &&
+                    item.multiplelogbookshares.length > 0 && (
                       <React.Fragment>
                         <Link to={`/details/${shareid}/${item.id}`}>
                           <div className="flex gap-4 ">
                             <div className="w-[110px] h-[76px] ">
-                            <img
-                                   src={"https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.jpg"}
-                                   className="rounded-[8px] w-full h-full"/>
+                              <img
+                                src={
+                                  item.multiplelogbookshares[0]
+                                    ?.logbookmedium &&
+                                  item.multiplelogbookshares[0]?.logbookmedium
+                                    .FileUrl
+                                }
+                                className="rounded-[8px] w-full h-full"
+                              />
                             </div>
                             <div className="flex flex-col mt-1.5  ">
                               <span className="pangrammedium  text-[13px] leading-[13px] ">
