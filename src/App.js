@@ -34,7 +34,7 @@ function LogbookShareWrapper() {
         setLoading(true);
 
         const response = await fetch(
-          `http://localhost:4000/v3/log/share/${shareid}`,
+          `https://dhavalapi.sjonarrond.is/v3/log/share/${shareid}`,
           {
             method: "GET",
           }
