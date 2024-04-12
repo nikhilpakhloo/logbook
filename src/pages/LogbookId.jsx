@@ -18,6 +18,7 @@ export default function LogbookId() {
   const [img, setImg] = useState([]);
   const [loading, setLoading] = useState(false);
   const [maxDepth, setMaxDepth] = useState(0);
+  const [temperature, setTemperature] = useState(0);
   const [graphData, setGraphData] = useState([]);
 
   useEffect(() => {
@@ -37,23 +38,31 @@ export default function LogbookId() {
     
         const jsonData = await response.json();
         console.log("FirstOne ", jsonData.data);
-        const maxDepthTemp = jsonData.data.log.logdepthtimes.reduce((max, item) => Math.max(max, parseFloat(item.Depth)), 0);
-        
-        // Assuming logdepthtimes is sorted by Time. If not, you should sort it before mapping.
-        const initialTime = new Date(jsonData.data.log.logdepthtimes[0]?.Time).getTime() / 60000;
-        const graphDataTemp = jsonData.data.log.logdepthtimes.map(item => {
-          const timeInMinutes = (new Date(item.Time).getTime() / 60000) - initialTime;
-          const depth = parseInt(item.Depth, 10);
-          return {
-            // If timeInMinutes is NaN, this indicates an issue with the item.Time value. Consider how best to handle this.
-            x: isNaN(timeInMinutes) ? 0 : timeInMinutes, // Adjust time to minutes from the first entry, but consider handling invalid times differently
-            y: isNaN(depth) ? 0 : depth // Check if depth is NaN, if so, set to 0
-          };
-        }).filter(item => !isNaN(item.x) && !isNaN(item.y)); // Optionally, filter out entries where either time or depth is NaN
-        console.log("graphDataTemp", graphDataTemp)
-    
-        setMaxDepth(maxDepthTemp);
-        setGraphData(graphDataTemp);
+      
+      let maxDepthEntry = null;
+      jsonData.data.log.logdepthtimes.forEach(item => {
+      const currentDepth = parseFloat(item.Depth);
+      if (!maxDepthEntry || currentDepth > parseFloat(maxDepthEntry.Depth)) {
+          maxDepthEntry = item;
+      }
+});
+const temperatureAtMaxDepth = maxDepthEntry ? maxDepthEntry.Temperature : 'N/A';
+setTemperature(temperatureAtMaxDepth);
+
+const maxDepthTemp = jsonData.data.log.logdepthtimes.reduce((max, item) => Math.max(max, parseFloat(item.Depth)), 0);
+
+const initialTime = new Date(jsonData.data.log.logdepthtimes[0]?.Time).getTime() / 60000;
+const graphDataTemp = jsonData.data.log.logdepthtimes.map(item => {
+  const timeInMinutes = (new Date(item.Time).getTime() / 60000) - initialTime;
+  const depth = parseInt(item.Depth, 10);
+  return {
+    x: isNaN(timeInMinutes) ? 0 : timeInMinutes,
+    y: isNaN(depth) ? 0 : depth
+  };
+}).filter(item => !isNaN(item.x) && !isNaN(item.y));
+
+setMaxDepth(maxDepthTemp);
+setGraphData(graphDataTemp);
         setData(jsonData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -270,7 +279,7 @@ export default function LogbookId() {
                             {index === 0 && (
                               <span className="">
                                 <span className="text-[28px] leading-[36px] pangramregular">
-                                {Math.round(maxDepth)}
+                                {textUnits[index] ? textUnits[index] : 0}
                                 </span>
                                 <span className="mx-1">
                                   <span className="pangrammedium text-[18px] leading-[28px]">
@@ -294,7 +303,7 @@ export default function LogbookId() {
                             {index === 2 && (
                               <span className="">
                                 <span className="text-[28px] leading-[36px] pangramregular">
-                                  {textUnits[index] ? textUnits[index] : 0}
+                                  {temperature || textUnits[index] || 0}
                                 </span>
                                 <span className="mx-1">
                                   <span className="pangrammedium text-[18px] leading-[28px]">
@@ -323,9 +332,9 @@ export default function LogbookId() {
                 </div>
               ))}
             </div>
-            <div className="w-full flex justify-center my-5 mx-auto ">
+            {maxDepth && <div className="w-full flex justify-center my-5 mx-auto ">
               <div id="chart" className="md:w-[450px] w-full "></div>
-            </div>
+            </div>}
           </div>
           <div className="mt-4 relative gap-y-2 gap-10 flex flex-col flex-wrap items-center md:justify-center ">
             {img.sharemedia &&
