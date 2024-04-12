@@ -18,7 +18,6 @@ export default function LogbookId() {
   const [img, setImg] = useState([]);
   const [loading, setLoading] = useState(false);
   const [maxDepth, setMaxDepth] = useState(0);
-  const [temperature, setTemperature] = useState(0);
   const [graphData, setGraphData] = useState([]);
 
   useEffect(() => {
@@ -46,8 +45,6 @@ export default function LogbookId() {
           maxDepthEntry = item;
       }
 });
-const temperatureAtMaxDepth = maxDepthEntry ? maxDepthEntry.Temperature : 'N/A';
-setTemperature(temperatureAtMaxDepth);
 
 const maxDepthTemp = jsonData.data.log.logdepthtimes.reduce((max, item) => Math.max(max, parseFloat(item.Depth)), 0);
 
@@ -303,7 +300,7 @@ setGraphData(graphDataTemp);
                             {index === 2 && (
                               <span className="">
                                 <span className="text-[28px] leading-[36px] pangramregular">
-                                  {temperature || textUnits[index] || 0}
+                                  {textUnits[index] || 0}
                                 </span>
                                 <span className="mx-1">
                                   <span className="pangrammedium text-[18px] leading-[28px]">
@@ -332,9 +329,9 @@ setGraphData(graphDataTemp);
                 </div>
               ))}
             </div>
-            {maxDepth && <div className="w-full flex justify-center my-5 mx-auto ">
+            {/* {maxDepth && <div className="w-full flex justify-center my-5 mx-auto ">
               <div id="chart" className="md:w-[450px] w-full "></div>
-            </div>}
+            </div>} */}
           </div>
           <div className="mt-4 relative gap-y-2 gap-10 flex flex-col flex-wrap items-center md:justify-center ">
             {img.sharemedia &&
