@@ -17,6 +17,8 @@ export default function LogbookId() {
   const [data, setData] = useState([]);
   const [img, setImg] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [maxDepth, setMaxDepth] = useState(0);
+  const [graphData, setGraphData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,17 +30,35 @@ export default function LogbookId() {
             method: "GET",
           }
         );
-
+    
         if (!response.ok) { 
           throw new Error("Network response was not ok");
         }
-
+    
         const jsonData = await response.json();
+        console.log("FirstOne ", jsonData.data);
+        const maxDepthTemp = jsonData.data.log.logdepthtimes.reduce((max, item) => Math.max(max, parseFloat(item.Depth)), 0);
+        
+        // Assuming logdepthtimes is sorted by Time. If not, you should sort it before mapping.
+        const initialTime = new Date(jsonData.data.log.logdepthtimes[0]?.Time).getTime() / 60000;
+        const graphDataTemp = jsonData.data.log.logdepthtimes.map(item => {
+          const timeInMinutes = (new Date(item.Time).getTime() / 60000) - initialTime;
+          const depth = parseInt(item.Depth, 10);
+          return {
+            // If timeInMinutes is NaN, this indicates an issue with the item.Time value. Consider how best to handle this.
+            x: isNaN(timeInMinutes) ? 0 : timeInMinutes, // Adjust time to minutes from the first entry, but consider handling invalid times differently
+            y: isNaN(depth) ? 0 : depth // Check if depth is NaN, if so, set to 0
+          };
+        }).filter(item => !isNaN(item.x) && !isNaN(item.y)); // Optionally, filter out entries where either time or depth is NaN
+        console.log("graphDataTemp", graphDataTemp)
+    
+        setMaxDepth(maxDepthTemp);
+        setGraphData(graphDataTemp);
         setData(jsonData.data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
-        setLoading(false);
+      } finally {
+        setLoading(false); 
       }
     };
     const fetchData2 = async () => {
@@ -55,6 +75,7 @@ export default function LogbookId() {
         }
 
         const jsonData = await response.json();
+        console.log(jsonData.data)
         setImg(jsonData.data);
       } catch (error) {
         console.error("Error fetching data from second API:", error);
@@ -119,16 +140,9 @@ export default function LogbookId() {
       fill: true,
     },
     series: [
-      {
-        data: [
-          { x: "0.00", y: 0 },
-          { x: "10.00", y: 12 },
-          { x: "12.00", y: 10 },
-          { x: "20.00", y: 24 },
-          { x: "30.00", y: 12 },
-          { x: "42.00", y: 0 },
-        ],
-      },
+     {
+      data: graphData
+    },
     ],
     xaxis: {
       categories: ["0.00", "10.00", "20.00", "30.00", "42.00"],
@@ -175,6 +189,7 @@ export default function LogbookId() {
   const goBack = () => {
     navigate(-1);
   };
+  
 
   return (
     <>
@@ -224,18 +239,18 @@ export default function LogbookId() {
                   )}
               </div>
               <div className="">
-                <span className="text-[13px] leading-[18px]  pangrammedium">
+               {data.log && data.log.divesite && data.log.divesite.Nation && <span className="text-[13px] leading-[18px]  pangrammedium">
                   {data.log && data.log.divesite && data.log.divesite.Nation},
-                </span>
-                <span className="text-[13px] leading-[18px]  pangrammedium">
+                </span>}
+                {data.log && data.log.divesite && data.log.divesite.SiteLocation && <span className="text-[13px] leading-[18px]  pangrammedium">
                   {data.log &&
                     data.log.divesite &&
                     data.log.divesite.SiteLocation}
                   ,
-                </span>
-                <span className="text-[13px] leading-[18px]  pangrammedium">
+                </span>}
+                {data.log && data.log.divesite && data.log.divesite.SiteName && <span className="text-[13px] leading-[18px]  pangrammedium">
                   {data.log && data.log.divesite && data.log.divesite.SiteName}
-                </span>
+                </span>}
               </div>
             </div>
 
@@ -255,7 +270,7 @@ export default function LogbookId() {
                             {index === 0 && (
                               <span className="">
                                 <span className="text-[28px] leading-[36px] pangramregular">
-                                  {textUnits[index]}
+                                {Math.round(maxDepth)}
                                 </span>
                                 <span className="mx-1">
                                   <span className="pangrammedium text-[18px] leading-[28px]">
@@ -267,7 +282,7 @@ export default function LogbookId() {
                             {index === 1 && (
                               <span className="">
                                 <span className="text-[28px] leading-[36px] pangramregular">
-                                  {textUnits[index]}
+                                  {textUnits[index] ? textUnits[index] : 0}
                                 </span>
                                 <span className=" mx-1">
                                   <span className="pangrammedium text-[18px] leading-[28px]">
@@ -279,7 +294,7 @@ export default function LogbookId() {
                             {index === 2 && (
                               <span className="">
                                 <span className="text-[28px] leading-[36px] pangramregular">
-                                  {textUnits[index]}
+                                  {textUnits[index] ? textUnits[index] : 0}
                                 </span>
                                 <span className="mx-1">
                                   <span className="pangrammedium text-[18px] leading-[28px]">
@@ -290,12 +305,12 @@ export default function LogbookId() {
                             )}
                             {index === 3 && (
                               <span className="">
-                                <span className="text-[28px] leading-[36px] pangramregular">
-                                  {textUnits[index]}
-                                </span>
+                                {/* <span className="text-[28px] leading-[36px] pangramregular">
+                                  {textUnits[index] ? textUnits[index] : 0}
+                                </span> */}
                                 <span className=" mx-1">
                                   <span className="pangrammedium text-[18px] leading-[28px]">
-                                    EAN 21
+                                    EAN  {textUnits[index] ? textUnits[index] : 0}
                                   </span>
                                 </span>
                               </span>
