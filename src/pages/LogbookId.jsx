@@ -48,7 +48,6 @@ export default function LogbookId() {
 
 const maxDepthTemp = jsonData.data.log.logdepthtimes.reduce((max, item) => Math.max(max, parseFloat(item.Depth)), 0);
 
-const initialTime = new Date(jsonData.data.log.logdepthtimes[0]?.Time).getTime() / 60000;
 const graphDataTemp = jsonData.data.log.logdepthtimes.map(item => {
   const timeInMinutes = (new Date(item.Time).getTime() / 60000) - initialTime;
   const depth = parseInt(item.Depth, 10);
@@ -174,12 +173,12 @@ setGraphData(graphDataTemp);
 
   useEffect(() => {
     if (!loading) {
-      const chart = new ApexCharts(document.querySelector("#chart"), options);
-      chart.render();
+      // const chart = new ApexCharts(document.querySelector("#chart"), options);
+      // chart.render();
 
-      return () => {
-        chart.destroy();
-      };
+      // return () => {
+      //   chart.destroy();
+      // };
     }
   }, [loading]);
 
