@@ -16,7 +16,6 @@ export default function LogbookId() {
   const [data, setData] = useState([]);
   const [img, setImg] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [maxDepth, setMaxDepth] = useState(0);
   const [graphData, setGraphData] = useState([]);
 
   useEffect(() => {
@@ -47,29 +46,16 @@ export default function LogbookId() {
             maxDepthEntry = item;
           }
         });
-
-        const maxDepthTemp = jsonData.data.log.logdepthtimes.reduce(
-          (max, item) => Math.max(max, parseFloat(item.Depth)),
-          0
-        );
         const initialTime =
           new Date(jsonData.data.log.logdepthtimes[0]?.Time).getTime() / 60000;
-        const graphDataTemp = jsonData.data.log.logdepthtimes
-          .map((item) => {
-            // const timeInMinutes =
-            //   new Date(item.Time).getTime() / 60000 - initialTime;
-            // const depth = parseInt(item.Depth, 10);
-            // return {
-            //   x: isNaN(timeInMinutes) ? 0 : timeInMinutes,
-            //   y: isNaN(depth) ? 0 : depth,
-            // };
+          const graphDataTemp = jsonData.data.log.logdepthtimes.map(item => {
+            const timeInMinutes = (new Date(item.Time).getTime() / 60000) - initialTime;
+            const depth = parseInt(item.Depth, 10);
             return {
-              x: item.Time,
-              y: parseInt(item.Depth, 10)
+              x: isNaN(timeInMinutes) ? 0 : timeInMinutes,
+              y: isNaN(depth) ? 0 : depth
             };
-          })
-
-        setMaxDepth(maxDepthTemp);
+          }).filter(item => !isNaN(item.x) && !isNaN(item.y));
         console.log("GraphData", graphDataTemp);
         setGraphData(graphDataTemp);
         setData(jsonData.data);
@@ -152,6 +138,27 @@ export default function LogbookId() {
     </div>
   );
 
+  const pickNItemsEvenly = (arr, n) => {
+    const length = arr.length;
+    if (n >= length) return arr;
+  
+    let result = [];
+    // Calculate the step to evenly distribute n items across the array length
+    const step = length / n;
+  
+    for (let i = 0; i < n; i++) {
+      // Calculate index for each step and round it to get an integer index
+      // Ensure the index is within the array bounds
+      const idx = Math.min(Math.floor(i * step), length - 1);
+      result.push(arr[idx]);
+    }
+  
+    return result;
+  };
+  
+  // Assuming graphData is already defined and populated
+  const sampledGraphData = pickNItemsEvenly(graphData, 8);
+  
   const options = {
     chart: {
       type: "area",
@@ -159,7 +166,7 @@ export default function LogbookId() {
     },
     series: [
       {
-        data: graphData,
+        data: sampledGraphData,
       },
     ],
     xaxis: {
@@ -192,7 +199,7 @@ export default function LogbookId() {
         chart.destroy();
       };
     }
-  }, [loading]);
+  }, [loading,options]);
 
   const handleDownload = (imageUrl) => {
     const link = document.createElement("a");
