@@ -13,7 +13,6 @@ import ApexCharts from "apexcharts";
 export default function LogbookId() {
   const { shareid, logid } = useParams();
 
- 
   const [data, setData] = useState([]);
   const [img, setImg] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,40 +29,54 @@ export default function LogbookId() {
             method: "GET",
           }
         );
-    
-        if (!response.ok) { 
+
+        if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-    
+
         const jsonData = await response.json();
         console.log("FirstOne ", jsonData.data);
-      
-      let maxDepthEntry = null;
-      jsonData.data.log.logdepthtimes.forEach(item => {
-      const currentDepth = parseFloat(item.Depth);
-      if (!maxDepthEntry || currentDepth > parseFloat(maxDepthEntry.Depth)) {
-          maxDepthEntry = item;
-      }
-});
 
-const maxDepthTemp = jsonData.data.log.logdepthtimes.reduce((max, item) => Math.max(max, parseFloat(item.Depth)), 0);
+        let maxDepthEntry = null;
+        jsonData.data.log.logdepthtimes.forEach((item) => {
+          const currentDepth = parseFloat(item.Depth);
+          if (
+            !maxDepthEntry ||
+            currentDepth > parseFloat(maxDepthEntry.Depth)
+          ) {
+            maxDepthEntry = item;
+          }
+        });
 
-const graphDataTemp = jsonData.data.log.logdepthtimes.map(item => {
-  const timeInMinutes = (new Date(item.Time).getTime() / 60000) - initialTime;
-  const depth = parseInt(item.Depth, 10);
-  return {
-    x: isNaN(timeInMinutes) ? 0 : timeInMinutes,
-    y: isNaN(depth) ? 0 : depth
-  };
-}).filter(item => !isNaN(item.x) && !isNaN(item.y));
+        const maxDepthTemp = jsonData.data.log.logdepthtimes.reduce(
+          (max, item) => Math.max(max, parseFloat(item.Depth)),
+          0
+        );
+        const initialTime =
+          new Date(jsonData.data.log.logdepthtimes[0]?.Time).getTime() / 60000;
+        const graphDataTemp = jsonData.data.log.logdepthtimes
+          .map((item) => {
+            // const timeInMinutes =
+            //   new Date(item.Time).getTime() / 60000 - initialTime;
+            // const depth = parseInt(item.Depth, 10);
+            // return {
+            //   x: isNaN(timeInMinutes) ? 0 : timeInMinutes,
+            //   y: isNaN(depth) ? 0 : depth,
+            // };
+            return {
+              x: item.Time,
+              y: parseInt(item.Depth, 10)
+            };
+          })
 
-setMaxDepth(maxDepthTemp);
-setGraphData(graphDataTemp);
+        setMaxDepth(maxDepthTemp);
+        console.log("GraphData", graphDataTemp);
+        setGraphData(graphDataTemp);
         setData(jsonData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
     const fetchData2 = async () => {
@@ -80,7 +93,7 @@ setGraphData(graphDataTemp);
         }
 
         const jsonData = await response.json();
-        console.log(jsonData.data)
+        console.log("JSON DATA",jsonData.data);
         setImg(jsonData.data);
       } catch (error) {
         console.error("Error fetching data from second API:", error);
@@ -145,9 +158,9 @@ setGraphData(graphDataTemp);
       fill: true,
     },
     series: [
-     {
-      data: graphData
-    },
+      {
+        data: graphData,
+      },
     ],
     xaxis: {
       categories: ["0.00", "10.00", "20.00", "30.00", "42.00"],
@@ -173,12 +186,11 @@ setGraphData(graphDataTemp);
 
   useEffect(() => {
     if (!loading) {
-      // const chart = new ApexCharts(document.querySelector("#chart"), options);
-      // chart.render();
-
-      // return () => {
-      //   chart.destroy();
-      // };
+      const chart = new ApexCharts(document.querySelector("#chart"), options);
+      chart.render();
+      return () => {
+        chart.destroy();
+      };
     }
   }, [loading]);
 
@@ -194,7 +206,6 @@ setGraphData(graphDataTemp);
   const goBack = () => {
     navigate(-1);
   };
-  
 
   return (
     <>
@@ -244,18 +255,30 @@ setGraphData(graphDataTemp);
                   )}
               </div>
               <div className="">
-               {data.log && data.log.divesite && data.log.divesite.Nation && <span className="text-[13px] leading-[18px]  pangrammedium">
-                  {data.log && data.log.divesite && data.log.divesite.Nation},
-                </span>}
-                {data.log && data.log.divesite && data.log.divesite.SiteLocation && <span className="text-[13px] leading-[18px]  pangrammedium">
-                  {data.log &&
-                    data.log.divesite &&
-                    data.log.divesite.SiteLocation}
-                  ,
-                </span>}
-                {data.log && data.log.divesite && data.log.divesite.SiteName && <span className="text-[13px] leading-[18px]  pangrammedium">
-                  {data.log && data.log.divesite && data.log.divesite.SiteName}
-                </span>}
+                {data.log && data.log.divesite && data.log.divesite.Nation && (
+                  <span className="text-[13px] leading-[18px]  pangrammedium">
+                    {data.log && data.log.divesite && data.log.divesite.Nation},
+                  </span>
+                )}
+                {data.log &&
+                  data.log.divesite &&
+                  data.log.divesite.SiteLocation && (
+                    <span className="text-[13px] leading-[18px]  pangrammedium">
+                      {data.log &&
+                        data.log.divesite &&
+                        data.log.divesite.SiteLocation}
+                      ,
+                    </span>
+                  )}
+                {data.log &&
+                  data.log.divesite &&
+                  data.log.divesite.SiteName && (
+                    <span className="text-[13px] leading-[18px]  pangrammedium">
+                      {data.log &&
+                        data.log.divesite &&
+                        data.log.divesite.SiteName}
+                    </span>
+                  )}
               </div>
             </div>
 
@@ -275,7 +298,7 @@ setGraphData(graphDataTemp);
                             {index === 0 && (
                               <span className="">
                                 <span className="text-[28px] leading-[36px] pangramregular">
-                                {textUnits[index] ? textUnits[index] : 0}
+                                  {textUnits[index] ? textUnits[index] : 0}
                                 </span>
                                 <span className="mx-1">
                                   <span className="pangrammedium text-[18px] leading-[28px]">
@@ -310,12 +333,13 @@ setGraphData(graphDataTemp);
                             )}
                             {index === 3 && (
                               <span className="">
-                                {/* <span className="text-[28px] leading-[36px] pangramregular">
+                                <span className="text-[28px] leading-[36px] pangramregular">
                                   {textUnits[index] ? textUnits[index] : 0}
-                                </span> */}
+                                </span>
                                 <span className=" mx-1">
                                   <span className="pangrammedium text-[18px] leading-[28px]">
-                                    EAN  {textUnits[index] ? textUnits[index] : 0}
+                                    EAN{" "}
+                                    {textUnits[index] ? textUnits[index] : 0}
                                   </span>
                                 </span>
                               </span>
@@ -328,9 +352,9 @@ setGraphData(graphDataTemp);
                 </div>
               ))}
             </div>
-            {/* {maxDepth && <div className="w-full flex justify-center my-5 mx-auto ">
+            <div className="w-full flex justify-center my-5 mx-auto ">
               <div id="chart" className="md:w-[450px] w-full "></div>
-            </div>} */}
+            </div>
           </div>
           <div className="mt-4 relative gap-y-2 gap-10 flex flex-col flex-wrap items-center md:justify-center ">
             {img.sharemedia &&
